@@ -1,3 +1,17 @@
+
+// ==UserScript==
+// @name          TwitchMassBan - Easily ban hate raid accounts
+// @description   Easily ban hate raid accounts
+// @namespace     https://github.com/victornpb/twitch-mass-ban
+// @version       0.1
+// @match         https://twitch.tv/*
+// @homepageURL   https://github.com/victornpb/twitch-mass-ban
+// @supportURL    https://github.com/victornpb/twitch-mass-ban/issues
+// @contributionURL https://www.buymeacoffee.com/vitim
+// @grant         none
+// @license       MIT
+// ==/UserScript==
+
 (function() {
     var html = `<div class="botban" style="position: fixed; bottom: 50px; left: 50px; z-index: 99999999; background-color:#311b92; color:white; border: 1px solid white; padding:5px;">
     <div style="display: flex;">
