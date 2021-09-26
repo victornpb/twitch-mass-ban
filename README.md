@@ -22,4 +22,4 @@ or
 1. Click the **Ban ALL** button.
 
 
-![img](./ss.gif)
+![img](https://github.com/victornpb/twitch-mass-ban/blob/master/2021-09-26%2005-26-07.2021-09-26%2005_27_32.gif?raw=true)
