@@ -20,3 +20,6 @@ or
 1. Click the **Grab usernames** button.
 
 1. Click the **Ban ALL** button.
+
+
+![img](./ss.gif)
