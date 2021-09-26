@@ -63,7 +63,7 @@ textarea{
     
     function appendActivatorBtn(){
         const twitchBar = document.querySelector('[data-test-selector="chat-input-buttons-container"]');
-        if (twitchBar && !twitchBar.contains(activateBtn)
+        if (twitchBar && !twitchBar.contains(activateBtn))
             twitchBar.insertBefore(activateBtn, twitchBar.firstChild);
     }
     setInterval(appendActivatorBtn, 1E3);
