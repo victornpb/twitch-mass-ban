@@ -3,8 +3,10 @@
 // @name          TwitchMassBan - Easily ban hate raid accounts
 // @description   Easily ban hate raid accounts
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.1
-// @match         https://twitch.tv/*
+// @version       0.2
+// @match         *://*.twitch.tv/*
+// @grant         none
+// @run-at        document-start
 // @homepageURL   https://github.com/victornpb/twitch-mass-ban
 // @supportURL    https://github.com/victornpb/twitch-mass-ban/issues
 // @contributionURL https://www.buymeacoffee.com/vitim
