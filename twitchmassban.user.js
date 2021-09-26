@@ -13,7 +13,8 @@
 // ==/UserScript==
 
 (function() {
-    var html = `<div class="botban" style="position: fixed; bottom: 50px; left: 50px; z-index: 99999999; background-color:#311b92; color:white; border: 1px solid white; padding:5px;">
+    var html = `
+    <div class="botban" style="position: fixed; bottom: 50px; left: 50px; z-index: 99999999; background-color:#311b92; color:white; border: 1px solid white; padding:5px;">
     <div style="display: flex;">
         <button class="clear">CLEAR</button>
         <button class="extract">GRAB USERNAMES</button>
@@ -26,7 +27,7 @@
   <textarea placeholder="Usernames" style="font-family:monospace; width: 500px; height: 300px; white-space: nowrap;"></textarea>
 <style>
 .botban{
-    backgoo
+    
 }
 .botban button{
     border: 1px solid white;
@@ -46,8 +47,31 @@ textarea{
     var textarea = d.querySelector("textarea");
     document.body.appendChild(d);
     textarea.focus();
+    
+    
+    const activateBtn = document.createElement('button');
+    activateBtn.innerHTML = 'MASSBAN';
+    activateBtn.style.cssText = `
+        font-weight: var(--font-weight-semibold);
+        border-radius: var(--border-radius-medium);
+        font-size: var(--button-text-default);
+        height: var(--button-size-default);
+        background-color: #e91e63;
+        color: var(--color-text-button-primary);
+    `;
+    activateBtn.onclick = ()=>d.style.display='';
+    
+    function appendActivatorBtn(){
+        const twitchBar = document.querySelector('[data-test-selector="chat-input-buttons-container"]');
+        if (twitchBar && !twitchBar.contains(activateBtn)
+            twitchBar.insertBefore(activateBtn, twitchBar.firstChild);
+    }
+    setInterval(appendActivatorBtn, 1E3);
 
-    d.querySelector(".closeBtn").onclick = () => document.body.removeChild(d);
+    d.style.display = 'none';
+
+
+    d.querySelector(".closeBtn").onclick = () => d.style.display='none';
 
     d.querySelector(".clear").onclick = function(){
         textarea.value = '';
