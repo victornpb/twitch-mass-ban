@@ -3,6 +3,8 @@ Everytime someone follows the window should appear you can click Ignore, click t
 
 ![](https://user-images.githubusercontent.com/3372598/134840805-af6eef0e-898e-4b74-867e-add1f53edc93.gif)  
 
+# Instructions
+
 1. First you need a **browser extension** for managing **user scripts** (skip if you already have one):
     
     - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)     
@@ -19,7 +21,5 @@ or
 1. A hammer icon should appear next to Twitch chat.
 ----
 
-It will not appear for streams you don't have moderation tools.
-You need StreamElements bot announcing follow alerts in the chat.
-
-
+- It will ONLY appear for streams you have moderation tools enabled.
+- You need StreamElements bot announcing follow alerts in the chat.
