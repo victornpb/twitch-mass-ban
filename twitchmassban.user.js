@@ -4,7 +4,7 @@
 // @description   A tool making twitch modding easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
 // @version       0.9
-// @match         *://*.twitch.tv/
+// @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-idle
 // @homepageURL   https://github.com/victornpb/twitch-mass-ban
