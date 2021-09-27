@@ -3,7 +3,7 @@
 // @name          TwitchMassBan - Easily ban hate raid accounts
 // @description   Easily ban hate raid accounts
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.5
+// @version       0.6
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-start
@@ -112,8 +112,10 @@ textarea{
   
     d.querySelector(".banAll").onclick = async function(){
         var lines = textarea.value.split(/\n/).map(t=>t.trim()).filter(Boolean);
-        for(const line of lines){
-            sendMessage('/ban '+line);
+        for(let line of lines){
+            line = line.replace(/@/g,'');
+            if (line.match(/^\w+$/)) sendMessage('/ban '+line);
+            else alert(`This doesnt look like an user "${line}"`);
             await delay(250);
         }
         textarea.value = '';
