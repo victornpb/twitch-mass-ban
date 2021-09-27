@@ -3,7 +3,7 @@
 // @name          TwitchMassBan - Easily ban hate raid accounts
 // @description   Easily ban hate raid accounts
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.4
+// @version       0.5
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-start
@@ -43,16 +43,15 @@ textarea{
 }
 </style>
 </div>`;
-
-    var d = document.createElement("div");
+    
+    // modal
+    const d = document.createElement("div");
     d.innerHTML = html;
-    var textarea = d.querySelector("textarea");
-    document.body.appendChild(d);
-    textarea.focus();
+    const textarea = d.querySelector("textarea");
     
-    
+    // activation button
     const activateBtn = document.createElement('button');
-    activateBtn.innerHTML = 'MASSBAN';
+    activateBtn.innerHTML = 'MassBan';
     activateBtn.style.cssText = `
         font-weight: var(--font-weight-semibold);
         border-radius: var(--border-radius-medium);
@@ -61,12 +60,21 @@ textarea{
         background-color: #e91e63;
         color: var(--color-text-button-primary);
     `;
-    activateBtn.onclick = ()=>d.style.display='';
+    
+    activateBtn.onclick = ()=>{
+        d.style.display='';
+        textarea.focus();
+    }
     
     function appendActivatorBtn(){
-        const twitchBar = document.querySelector('[data-test-selector="chat-input-buttons-container"]');
-        if (twitchBar && !twitchBar.contains(activateBtn))
-            twitchBar.insertBefore(activateBtn, twitchBar.firstChild);
+        const modBtn = document.querySelector('[data-test-selector="mod-view-link"]');
+        if (modBtn) {
+            const twitchBar = modBtn.parentElement.parentElement.parentElement;
+             if (twitchBar && !twitchBar.contains(activateBtn)) {
+                 twitchBar.insertBefore(activateBtn, twitchBar.firstChild);
+                 document.body.appendChild(d);
+             }
+        }
     }
     setInterval(appendActivatorBtn, 1E3);
 
@@ -106,7 +114,7 @@ textarea{
         var lines = textarea.value.split(/\n/).map(t=>t.trim()).filter(Boolean);
         for(const line of lines){
             sendMessage('/ban '+line);
-            await delay(100);
+            await delay(250);
         }
         textarea.value = '';
     };
