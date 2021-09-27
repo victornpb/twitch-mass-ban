@@ -3,7 +3,7 @@
 // @name          TwitchMassBan - Easily ban hate raid accounts
 // @description   Easily ban hate raid accounts
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.6
+// @version       0.7
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-start
@@ -16,10 +16,10 @@
 
 (function() {
     var html = `
-    <div class="botban" style="position: fixed; bottom: 50px; left: 50px; z-index: 99999999; background-color:#311b92; color:white; border: 1px solid white; padding:5px;">
+    <div class="botban" style="position: fixed; bottom: 10px; right: 350px; z-index: 99999999; background-color:#311b92; color:white; border: 1px solid white; padding:5px;">
     <div style="display: flex;">
         <button class="clear">CLEAR</button>
-        <button class="extract">GRAB USERNAMES</button>
+        <button class="extract" title="Auto detect recent followers">DETECT</button>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button class="banAll" style="background: red;">BAN ALL</button>
         <span style="flex-grow: 1;"></span>
@@ -40,6 +40,7 @@ textarea{
     background: var(--color-background-base);
     color: var(--color-text-base);
     padding: .5em;
+    font-size: 12pt;
 }
 </style>
 </div>`;
@@ -64,6 +65,7 @@ textarea{
     activateBtn.onclick = ()=>{
         d.style.display='';
         textarea.focus();
+        detectUsers();
     }
     
     function appendActivatorBtn(){
@@ -87,9 +89,13 @@ textarea{
         textarea.value = '';
     };
     
-    d.querySelector(".extract").onclick = function(){
-         let usernames = [];
-         textarea.value.replace(/Thank you for following ([\w_]+) /g, (m,name)=>{
+    d.querySelector(".extract").onclick = detectUsers;
+    function detectUsers() {
+         const chatArea = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
+         if (!chatArea) return;
+      
+          let usernames = [];
+         chatArea.innerText.replace(/Thank you for following ([\w_]+) /g, (m, name)=>{
              usernames.push(name);
              return '';
          });
@@ -98,7 +104,8 @@ textarea{
             textarea.value = usernames.join('\n');
         else 
             textarea.value = 'No usernames found!'
-    };
+    }
+    
 
     const delay = t=>new Promise(r=>setTimeout(r,t));
     function sendMessage(msg){
@@ -123,3 +130,4 @@ textarea{
 
 
 })();
+
