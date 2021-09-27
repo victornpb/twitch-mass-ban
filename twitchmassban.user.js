@@ -3,7 +3,7 @@
 // @name          RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool making twitch modding easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.9.2
+// @version       0.10.0
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-idle
@@ -86,7 +86,7 @@
         }
     </style>
     <div style="display: flex;">
-        <div class="logo">RaidHammer</div>
+        <div class="logo">RaidHammer 0.10.0</div>
         &nbsp;&nbsp;
         <button class="ignoreAll">IGNORE ALL</button>
         <button class="banAll">BAN ALL</button>
@@ -101,6 +101,7 @@
     </div>
 </div>
 `;
+    const LOGPREFIX = '[RAIDHAMMER]';
 
     // modal
     const d = document.createElement("div");
@@ -128,30 +129,38 @@
         background-color: var(--color-background-button-text-default);
         color: var(--color-fill-button-icon);
     `;
-    activateBtn.onclick = show;
+    activateBtn.onclick = toggle;
 
+    let enabled;
+    let watchdogTimer;
 
     function appendActivatorBtn() {
         const modBtn = document.querySelector('[data-test-selector="mod-view-link"]');
         if (modBtn) {
             const twitchBar = modBtn.parentElement.parentElement.parentElement;
             if (twitchBar && !twitchBar.contains(activateBtn)) {
+                console.log(LOGPREFIX, 'Mod tools available. Adding button...');
                 twitchBar.insertBefore(activateBtn, twitchBar.firstChild);
                 document.body.appendChild(d);
+                if (!enabled) {
+                    console.log(LOGPREFIX, 'Started chatWatchdog...');
+                    watchdogTimer = setInterval(chatWatchdog, 500);
+                    enabled = true;
+                }
+            }
+
+        }
+        else {
+            if (enabled) {
+                console.log(LOGPREFIX, 'Mod tools not found. Stopped chatWatchdog!');
+                clearInterval(watchdogTimer);
+                watchdogTimer = enabled = false;
+                hide();
             }
         }
     }
     setInterval(appendActivatorBtn, 1E3);
 
-
-    function show() {
-        d.style.display = '';
-        renderList();
-    }
-
-    function hide() {
-        d.style.display = 'none';
-    }
 
     //events
     d.querySelector(".ignoreAll").onclick = ignoreAll;
@@ -166,31 +175,31 @@
         if (target.matches('.accountage')) accountage(target.dataset.user);
     });
 
-    setInterval(watchdog, 500);
-
     const delay = t => new Promise(r => setTimeout(r, t));
+
+    function show() {
+        console.log(LOGPREFIX, 'Show');
+        d.style.display = '';
+        renderList();
+    }
+
+    function hide() {
+        console.log(LOGPREFIX, 'Hide');
+        d.style.display = 'none';
+    }
+
+    function toggle() {
+        if (d.style.display !== 'none') hide();
+        else show();
+    }
 
     let ignoredList = new Set();
     let queueList = new Set();
     let bannedList = new Set();
 
-    function extractRecent() {
-        const chatArea = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
-        if (!chatArea) return;
-
-        let usernames = [];
-        chatArea.innerText.replace(/Thank you for following ([\w_]+) /g, (m, name) => {
-            usernames.push(name);
-            return '';
-        });
-        usernames = [...new Set(usernames)];
-        return usernames;
-    }
-
-
-    function watchdog() {
+    function chatWatchdog() {
         const recentNames = extractRecent();
-        if (recentNames) {
+        if (recentNames.length) {
             const newNames = recentNames
                 .filter(name => !queueList.has(name))
                 .filter(name => !ignoredList.has(name))
@@ -203,42 +212,66 @@
         }
     }
 
+    function extractRecent() {
+        let usernames = [];
+        const chatArea = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
+        if (chatArea) {
+            chatArea.innerText.replace(/Thank you for following ([\w_]+) /g, (m, name) => {
+                usernames.push(name);
+                return '';
+            });
+            usernames = [...new Set(usernames)];
+        }
+        return usernames;
+    }
+
     function onFollower() {
-        console.log('onFollower', queueList);
+        console.log(LOGPREFIX, 'onFollower', queueList);
         renderList();
         show();
     }
 
     function ignoreAll() {
+        console.log(LOGPREFIX, 'Ignoring all...', queueList);
         for (const user of queueList)
             ignoreItem(user);
     }
 
     async function banAll() {
+        console.log(LOGPREFIX, 'Banning all...', queueList);
         for (const user of queueList) {
             banItem(user);
             await delay(250);
         }
     }
 
-    function accountage(item) {
-        console.log('Accountage', item);
-        sendMessage('!accountage ' + item);
+    function accountage(user) {
+        console.log(LOGPREFIX, 'Accountage', user);
+        sendMessage('!accountage ' + user);
     }
 
-    function ignoreItem(item) {
-        console.log('Ignored user', item);
-        queueList.delete(item);
-        ignoredList.add(item);
+    function ignoreItem(user) {
+        console.log(LOGPREFIX, 'Ignored user', user);
+        queueList.delete(user);
+        ignoredList.add(user);
         renderList();
     }
 
-    function banItem(item) {
-        console.log('Ban user', item);
-        queueList.delete(item);
-        bannedList.add(item);
-        sendMessage('/ban ' + item);
+    function banItem(user) {
+        console.log(LOGPREFIX, 'Ban user', user);
+        queueList.delete(user);
+        bannedList.add(user);
+        sendMessage('/ban ' + user);
         renderList();
+    }
+
+    function sendMessage(msg) {
+        const textarea = document.querySelector("[data-a-target='chat-input']");
+        const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+        nativeTextAreaValueSetter.call(textarea, msg);
+        const event = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(event);
+        document.querySelector("[data-a-target='chat-send-button']").click();
     }
 
     function renderList() {
@@ -260,12 +293,4 @@
       `;
     }
 
-    function sendMessage(msg) {
-        const textarea = document.querySelector("[data-a-target='chat-input']");
-        const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
-        nativeTextAreaValueSetter.call(textarea, msg);
-        const event = new Event('input', { bubbles: true });
-        textarea.dispatchEvent(event);
-        document.querySelector("[data-a-target='chat-send-button']").click();
-    }
 })();
