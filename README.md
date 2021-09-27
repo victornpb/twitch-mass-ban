@@ -13,10 +13,10 @@ Everytime someone follows the window should appear you can click Ignore, click t
     - Microsoft Edge: [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)  
     - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
 
-1. Install *RaidHammer*
-<a href="https://greasyfork.org/en/scripts/432982-twitchmassban-easily-ban-hate-raid-accounts" target="_blank">Install from GreasyFork</a>**
+1. Install *RaidHammer*: 
+**<a href="https://greasyfork.org/en/scripts/432982-twitchmassban-easily-ban-hate-raid-accounts" target="_blank">Install from GreasyFork</a>**
 or
-**<a href="https://openuserjs.org/scripts/victornpb/TwitchMassBan_-_Easily_ban_hate_raid_accounts" target="_blank">Install from OpenUserJS</a>
+**<a href="https://openuserjs.org/scripts/victornpb/TwitchMassBan_-_Easily_ban_hate_raid_accounts" target="_blank">Install from OpenUserJS</a>**
 
 
 1. A hammer icon should appear next to Twitch chat.
