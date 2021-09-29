@@ -21,6 +21,8 @@ or
 
 1. A hammer icon should appear next to Twitch chat.
 ----
+Notes:
 
-- It will ONLY appear for streams you have moderation tools enabled.
-- You need StreamElements bot announcing follow alerts in the chat.
+- It will ONLY appear on streams you have moderation tools available.
+- You need StreamElements or StreamLabs bot announcing follow alerts in the chat.  
+    Example: **Streamlabs**: Thank you for following *username*!
