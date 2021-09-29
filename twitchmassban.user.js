@@ -3,7 +3,7 @@
 // @name          RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool making twitch modding easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.10.0
+// @version       0.10.1
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-idle
@@ -26,6 +26,7 @@
             background-color: var(--color-background-base);
             color: var(--color-text-base);
             border: var(--border-width-default) solid var(--color-border-base);
+            box-shadow: var(--shadow-elevation-2);
             padding: 5px;
             min-width: 300px;
         }
@@ -86,10 +87,10 @@
         }
     </style>
     <div style="display: flex;">
-        <div class="logo">RaidHammer 0.10.0</div>
+        <div class="logo">RaidHammer 0.10.1</div>
         &nbsp;&nbsp;
-        <button class="ignoreAll">IGNORE ALL</button>
-        <button class="banAll">BAN ALL</button>
+        <button class="ignoreAll">Ignore All</button>
+        <button class="banAll">Ban All</button>
         <span style="flex-grow: 1;"></span>
         <button class="closeBtn">X</button>
     </div>
@@ -213,17 +214,22 @@
     }
 
     function extractRecent() {
-        let usernames = [];
+        function findMatches(set, text, regex){
+            text.replace(regex, (m, g) => {
+                set.add(g);
+            });
+        }
+        
+        let usernames = new Set();
         const chatArea = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
         if (chatArea) {
-            chatArea.innerText.replace(/Thank you for following ([\w_]+) /g, (m, name) => {
-                usernames.push(name);
-                return '';
-            });
-            usernames = [...new Set(usernames)];
+            findMatches(usernames, chatArea.innerText, /Thank you for following ([\w_]+)/g);
+            findMatches(usernames, chatArea.innerText, /Welcome! ([\w_]+) Thank you for following!/g);
         }
-        return usernames;
+        return [...usernames];
     }
+  
+    
 
     function onFollower() {
         console.log(LOGPREFIX, 'onFollower', queueList);
@@ -255,6 +261,7 @@
         queueList.delete(user);
         ignoredList.add(user);
         renderList();
+        if (queueList.size===0) hide(); // auto hide on the last
     }
 
     function banItem(user) {
@@ -278,8 +285,8 @@
         const renderItem = item => `
         <li>
           <button class="accountage" data-user="${item}" title="Check account age">?</button>
-          <button class="ignore" data-user="${item}">IGNORE</button>
-          <button class="ban" data-user="${item}">BAN</button>
+          <button class="ignore" data-user="${item}">Ignore</button>
+          <button class="ban" data-user="${item}">Ban</button>
           <span>${item}</span>
         </li>
       `;
