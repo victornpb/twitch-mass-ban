@@ -3,7 +3,7 @@
 // @name          RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool making twitch modding easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       0.10.1
+// @version       0.11.0
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-idle
@@ -30,17 +30,28 @@
             padding: 5px;
             min-width: 300px;
         }
-
+        
+        .raidhammer .list {
+            background: var(--color-background-body);
+        }
+      
         .raidhammer .logo {
             font-weight: var(--font-weight-semibold);
             min-height: 30px;
             line-height: 30px;
             color: var(--color-text-link);
         }
+      
+        .raidhammer h5 button {
+            height: auto;
+            background: none;
+        }
 
         .raidhammer .list {
             padding: 1em;
             min-height: 8em;
+            max-height: 500px;
+            overflow-y: auto;
         }
 
         .raidhammer .empty {
@@ -53,7 +64,7 @@
             background: var(--color-background-base);
             color: var(--color-text-base);
             padding: .5em;
-            font-size: 12pt;
+            font-size: 10pt;
         }
 
         .raidhammer button {
@@ -80,26 +91,48 @@
             background: #f44336;
             min-width: 60px;
         }
-
+        
+        .raidhammer .import {
+            border: var(--border-width-default) solid var(--color-border-base);
+            padding: 3px; 
+        }
+      
+        .raidhammer .import textarea {
+            width: 100%;
+            min-height: 8em;
+        }
+      
         .raidhammer .footer {
             font-size: 7pt;
             text-align: center;
         }
+      
     </style>
     <div style="display: flex;">
-        <div class="logo">RaidHammer 0.10.1</div>
-        &nbsp;&nbsp;
-        <button class="ignoreAll">Ignore All</button>
-        <button class="banAll">Ban All</button>
+        <div class="logo"><a href="https://github.com/victornpb/twitch-mass-ban" target="_blank">RaidHammer 0.11.0</a></div>
         <span style="flex-grow: 1;"></span>
         <button class="closeBtn">X</button>
     </div>
-    <br>
-    <h5>Recent Users</h5>
-    <div class="list"></div>
-    <div class="footer">
-        <a href="https://github.com/victornpb/twitch-mass-ban" target="_blank">github.com/victornpb/twitch-mass-ban</a>
+    <div class="import" style="display:none;">
+      <div>Import users</div>
+      <textarea placeholder="Insert one username per line"></textarea>
+      <div style="text-align:right;">
+        <button class="cancel">Cancel</button><button class="import">Import</button>
+      </div>
     </div>
+    <div class="body">
+      <h5 style="display: flex;">
+        Recent Users
+        <span style="flex-grow: 1;"></span>
+      </h5>
+      <div class="list"></div>
+      <div style="display: flex; margin: 5px;">
+        <span style="flex-grow: 1;"></span>
+        <button class="ignoreAll">Ignore All</button>
+        <button class="banAll">Ban All</button>
+      </div>
+    </div>
+    <div class="footer"><a href="https://github.com/victornpb/twitch-mass-ban/issues" target="_blank">Issues or help</a></div>
 </div>
 `;
     const LOGPREFIX = '[RAIDHAMMER]';
@@ -130,6 +163,7 @@
         background-color: var(--color-background-button-text-default);
         color: var(--color-fill-button-icon);
     `;
+    activateBtn.setAttribute('title', 'RaidHammer');
     activateBtn.onclick = toggle;
 
     let enabled;
@@ -168,12 +202,17 @@
     d.querySelector(".banAll").onclick = banAll;
     d.querySelector(".closeBtn").onclick = hide;
 
+    d.querySelector(".import button.import").onclick = importList;
+    d.querySelector(".import button.cancel").onclick = toggleImport;
+
     // delegated events
     d.addEventListener('click', e => {
         const target = e.target;
         if (target.matches('.ignore')) ignoreItem(target.dataset.user);
         if (target.matches('.ban')) banItem(target.dataset.user);
         if (target.matches('.accountage')) accountage(target.dataset.user);
+        if (target.matches('.toggleImport')) toggleImport();
+
     });
 
     const delay = t => new Promise(r => setTimeout(r, t));
@@ -192,6 +231,31 @@
     function toggle() {
         if (d.style.display !== 'none') hide();
         else show();
+    }
+
+    function toggleImport() {
+        const importDiv = d.querySelector(".import");
+        const body = d.querySelector(".body");
+        if (importDiv.style.display !== 'none') {
+            importDiv.style.display = 'none';
+            body.style.display = '';
+        }
+        else {
+            importDiv.style.display = '';
+            body.style.display = 'none';
+            d.querySelector(".import textarea").focus();
+        }
+    }
+
+    function importList() {
+        const textarea = d.querySelector(".import textarea");
+        const lines = textarea.value.split(/\n/).map(line => line.trim()).filter(Boolean);
+        for (const line of lines) {
+            if (/^[\w_]+$/.test(line)) queueList.add(line);
+        }
+        textarea.value = '';
+        toggleImport();
+        renderList();
     }
 
     let ignoredList = new Set();
@@ -214,12 +278,12 @@
     }
 
     function extractRecent() {
-        function findMatches(set, text, regex){
+        function findMatches(set, text, regex) {
             text.replace(regex, (m, g) => {
                 set.add(g);
             });
         }
-        
+
         let usernames = new Set();
         const chatArea = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
         if (chatArea) {
@@ -228,8 +292,6 @@
         }
         return [...usernames];
     }
-  
-    
 
     function onFollower() {
         console.log(LOGPREFIX, 'onFollower', queueList);
@@ -261,7 +323,7 @@
         queueList.delete(user);
         ignoredList.add(user);
         renderList();
-        if (queueList.size===0) hide(); // auto hide on the last
+        if (queueList.size === 0) hide(); // auto hide on the last
     }
 
     function banItem(user) {
@@ -282,6 +344,8 @@
     }
 
     function renderList() {
+        d.querySelector(".ignoreAll").style.display = queueList.size ? '' : 'none';
+        d.querySelector(".banAll").style.display = queueList.size ? '' : 'none';
         const renderItem = item => `
         <li>
           <button class="accountage" data-user="${item}" title="Check account age">?</button>
@@ -291,7 +355,7 @@
         </li>
       `;
 
-        let inner = queueList.size ? [...queueList].map(user => renderItem(user)).join('') : `<div class="empty">Empty :)</div>`;
+        let inner = queueList.size ? [...queueList].map(user => renderItem(user)).join('') : `<div class="empty">Empty :)<br><br><button class="toggleImport" title="Add a list of usernames">Add names</button></div>`;
 
         d.querySelector('.list').innerHTML = `
         <ul>
