@@ -3,13 +3,12 @@
 // @name          RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool making twitch modding easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       1.0.0
+// @version       1.1.0
 // @match         *://*.twitch.tv/*
 // @grant         none
 // @run-at        document-idle
 // @homepageURL   https://github.com/victornpb/twitch-mass-ban
 // @supportURL    https://github.com/victornpb/twitch-mass-ban/issues
-// @downloadURL   https://github.com/victornpb/twitch-mass-ban/raw/master/twitchmassban.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant         none
 // @license       MIT
@@ -31,28 +30,38 @@
             padding: 5px;
             min-width: 300px;
         }
-        
-        .raidhammer .list {
-            background: var(--color-background-body);
+
+
+        .raidhammer .header {
+            display: flex;
         }
-      
+
         .raidhammer .logo {
             font-weight: var(--font-weight-semibold);
             min-height: 30px;
             line-height: 30px;
-            color: var(--color-text-link);
+            --color: var(--color-text-link);
         }
-      
-        .raidhammer h5 button {
+
+        .raidhammer h6 {
+            color: var(--color-hinted-grey-7);
+        }
+
+        .raidhammer h6 button {
             height: auto;
             background: none;
         }
 
         .raidhammer .list {
-            padding: 1em;
+            padding: 8px;
             min-height: 8em;
             max-height: 500px;
             overflow-y: auto;
+            background: var(--color-background-body);
+        }
+
+        .raidhammer .list span {
+            font-weight: var(--font-weight-semibold);
         }
 
         .raidhammer .empty {
@@ -61,15 +70,8 @@
             opacity: 0.85;
         }
 
-        .raidhammer textarea {
-            background: var(--color-background-base);
-            color: var(--color-text-base);
-            padding: .5em;
-            font-size: 10pt;
-        }
-
         .raidhammer button {
-            padding: 0 .2em;
+            padding: 0 .5em;
             margin: 1px;
             font-weight: var(--font-weight-semibold);
             border-radius: var(--border-radius-medium);
@@ -92,48 +94,57 @@
             background: #f44336;
             min-width: 60px;
         }
-        
+
         .raidhammer .import {
+            background: var(--color-background-body);
             border: var(--border-width-default) solid var(--color-border-base);
-            padding: 3px; 
+            padding: 3px;
         }
-      
-        .raidhammer .import textarea {
+
+        .raidhammer textarea {
+            background: var(--color-background-base);
+            color: var(--color-text-base);
+            padding: .5em;
+            font-size: 10pt;
             width: 100%;
             min-height: 8em;
         }
-      
+
         .raidhammer .footer {
             font-size: 7pt;
             text-align: center;
         }
-      
     </style>
-    <div style="display: flex;">
-        <div class="logo"><a href="https://github.com/victornpb/twitch-mass-ban" target="_blank">RaidHammer 0.11.0</a></div>
+    <div class="header">
+        <span style="flex-grow: 1;"></span>
+        <h5 class="logo">
+            <a href="https://github.com/victornpb/twitch-mass-ban" target="_blank">RaidHammer</a>
+            <samp>1.1</samp>
+        </h5>
         <span style="flex-grow: 1;"></span>
         <button class="closeBtn">X</button>
     </div>
     <div class="import" style="display:none;">
-      <div>Import users</div>
-      <textarea placeholder="Insert one username per line"></textarea>
-      <div style="text-align:right;">
-        <button class="cancel">Cancel</button><button class="import">Import</button>
-      </div>
+        <div>Mass BAN</div>
+        <textarea placeholder="Type one username per line"></textarea>
+        <div style="text-align:right;">
+            <button class="cancelBtn">Cancel</button>
+            <button class="importBtn">Add to list</button>
+        </div>
     </div>
     <div class="body">
-      <h5 style="display: flex;">
-        Recent Users
-        <span style="flex-grow: 1;"></span>
-      </h5>
-      <div class="list"></div>
-      <div style="display: flex; margin: 5px;">
-        <span style="flex-grow: 1;"></span>
-        <button class="ignoreAll">Ignore All</button>
-        <button class="banAll">Ban All</button>
-      </div>
+        <h6>
+            Usernames
+        </h6>
+        <div class="list"></div>
+        <div style="display: flex; margin: 5px;">
+            <span style="flex-grow: 1;"></span>
+            <button class="ignoreAll">Ignore All</button>
+            <button class="banAll">Ban All</button>
+        </div>
     </div>
-    <div class="footer"><a href="https://github.com/victornpb/twitch-mass-ban/issues" target="_blank">Issues or help</a></div>
+    <div class="footer"><a href="https://github.com/victornpb/twitch-mass-ban/issues" target="_blank">Issues or help</a>
+    </div>
 </div>
 `;
     const LOGPREFIX = '[RAIDHAMMER]';
@@ -203,8 +214,8 @@
     d.querySelector(".banAll").onclick = banAll;
     d.querySelector(".closeBtn").onclick = hide;
 
-    d.querySelector(".import button.import").onclick = importList;
-    d.querySelector(".import button.cancel").onclick = toggleImport;
+    d.querySelector(".import button.importBtn").onclick = importList;
+    d.querySelector(".import button.cancelBtn").onclick = toggleImport;
 
     // delegated events
     d.addEventListener('click', e => {
@@ -259,8 +270,8 @@
         renderList();
     }
 
-    let ignoredList = new Set();
     let queueList = new Set();
+    let ignoredList = new Set();
     let bannedList = new Set();
 
     function chatWatchdog() {
@@ -278,20 +289,28 @@
         }
     }
 
+    function parseChat() {
+        return Array.from(document.querySelectorAll('[data-test-selector="chat-line-message"]')).map(chat => {
+            return {
+                username: chat.querySelector('[data-test-selector="message-username"]').innerText,
+                message: chat.querySelector('[data-test-selector="chat-line-message-body"]').innerText,
+                // timestamp: chat.querySelector('[data-test-selector="chat-timestamp"]').innerText,
+            };
+        });
+    }
+
     function extractRecent() {
-        function findMatches(set, text, regex) {
-            text.replace(regex, (m, g) => {
-                set.add(g);
-            });
+        let newFollowers = new Set();
+        const messages = parseChat().filter(m => m.username === 'StreamElements' || m.username === 'Streamlabs');
+        for (const { message } of messages) {
+            const match = (
+                message.match(/Thank you for following ([\w_]+)/) ||
+                message.match(/Welcome! ([\w_]+) Thank you for following!/)
+            );
+            if (match) newFollowers.add(match[1]);
         }
 
-        let usernames = new Set();
-        const chatArea = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
-        if (chatArea) {
-            findMatches(usernames, chatArea.innerText, /Thank you for following ([\w_]+)/g);
-            findMatches(usernames, chatArea.innerText, /Welcome! ([\w_]+) Thank you for following!/g);
-        }
-        return [...usernames];
+        return [...newFollowers];
     }
 
     function onFollower() {
@@ -356,7 +375,13 @@
         </li>
       `;
 
-        let inner = queueList.size ? [...queueList].map(user => renderItem(user)).join('') : `<div class="empty">Empty :)<br><br><button class="toggleImport" title="Add a list of usernames">Add names</button></div>`;
+        let inner = queueList.size ? [...queueList].map(user => renderItem(user)).join('') : `
+          <div class="empty">
+              <h4>Recent followers is empty :)</h4>
+              <p>Automatically listening for new followers...</p>
+              <br><br>
+              <button class="toggleImport" title="Add a list of usernames">Import list</button>
+          </div>`;
 
         d.querySelector('.list').innerHTML = `
         <ul>
