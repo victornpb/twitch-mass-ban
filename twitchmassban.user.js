@@ -1,18 +1,20 @@
 
 // ==UserScript==
-// @name          RaidHammer - Easily ban multiple accounts during hate raids
-// @description   A tool making twitch modding easier during hate raids
+// @name          Twitch RaidHammer - Easily ban multiple accounts during hate raids
+// @description   A tool for moderating Twitch easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       1.1.0
+// @version       1.1.1
 // @match         *://*.twitch.tv/*
-// @grant         none
 // @run-at        document-idle
+// @author        victornpb
 // @homepageURL   https://github.com/victornpb/twitch-mass-ban
 // @supportURL    https://github.com/victornpb/twitch-mass-ban/issues
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant         none
 // @license       MIT
 // ==/UserScript==
+
+/* jshint esversion: 8 */
 
 (function () {
     var html = /*html*/`
