@@ -1,4 +1,4 @@
-# RaidHammer - An utility for Easily banning multiple hate raid accounts
+# Twitch RaidHammer - An utility for Easily banning multiple hate raid accounts
 Everytime someone follows the window should appear you can click Ignore, click the `?` to see the account age or you can **give all of them the BAN HAMMER**!
 
 ![](https://user-images.githubusercontent.com/3372598/134840805-af6eef0e-898e-4b74-867e-add1f53edc93.gif)  
