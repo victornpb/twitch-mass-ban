@@ -26,3 +26,4 @@ Notes:
 - It will ONLY appear on streams you have moderation tools available.
 - You need StreamElements or StreamLabs bot announcing follow alerts in the chat.  
     Example: **Streamlabs**: Thank you for following *username*!
+
