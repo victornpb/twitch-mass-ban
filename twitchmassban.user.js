@@ -3,7 +3,7 @@
 // @name          Twitch RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool for moderating Twitch easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       1.1.1
+// @version       1.1.2
 // @match         *://*.twitch.tv/*
 // @run-at        document-idle
 // @author        victornpb
@@ -355,8 +355,17 @@
         sendMessage('/ban ' + user);
         renderList();
     }
-
+    
     function sendMessage(msg) {
+        try{
+            sendMessageOld(msg);
+        }
+        catch(_){
+            sendMessageSlate(msg);
+        }
+    }
+  
+    function sendMessageOld(msg) {
         const textarea = document.querySelector("[data-a-target='chat-input']");
         const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
         nativeTextAreaValueSetter.call(textarea, msg);
@@ -364,6 +373,46 @@
         textarea.dispatchEvent(event);
         document.querySelector("[data-a-target='chat-send-button']").click();
     }
+
+    function sendMessageSlate(msg) {
+        function _injectInput(el, data) {
+            [
+                'keydown',
+                'beforeinput',
+                //'input',
+            ].forEach((event, i) => {
+                const eventObj = {
+                    altKey: false,
+                    charCode: 0,
+                    ctrlKey: false,
+                    metaKey: false,
+                    shiftKey: false,
+                    which: '',
+                    keyCode: '',
+                    data: data,
+                    inputType: 'insertText',
+                    key: data,
+                };
+                el.dispatchEvent(new InputEvent(event, eventObj));
+            });
+        }
+
+        function _triggerKeyboardEvent(el, keyCode) {
+            const eventObj = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
+            if (eventObj.initEvent) {
+                eventObj.initEvent("keydown", true, true);
+            }
+            eventObj.keyCode = keyCode;
+            eventObj.which = keyCode;
+            el.dispatchEvent ? el.dispatchEvent(eventObj) : el.fireEvent("onkeydown", eventObj);
+        }
+
+        const editor = document.querySelector('[data-slate-editor="true"]');
+        editor.focus();
+        _injectInput(editor, msg);
+        _triggerKeyboardEvent(editor, 13);
+    }
+
 
     function renderList() {
         d.querySelector(".ignoreAll").style.display = queueList.size ? '' : 'none';
