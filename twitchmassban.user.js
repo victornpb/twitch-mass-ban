@@ -3,7 +3,7 @@
 // @name          Twitch RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool for moderating Twitch easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       1.1.2
+// @version       1.1.3
 // @match         *://*.twitch.tv/*
 // @run-at        document-idle
 // @author        victornpb
@@ -121,7 +121,7 @@
         <span style="flex-grow: 1;"></span>
         <h5 class="logo">
             <a href="https://github.com/victornpb/twitch-mass-ban" target="_blank">RaidHammer</a>
-            <samp>1.1</samp>
+            <samp>1.1.3</samp>
         </h5>
         <span style="flex-grow: 1;"></span>
         <button class="closeBtn">X</button>
