@@ -24,6 +24,11 @@ or
 Notes:
 
 - It will ONLY appear on streams you have moderation tools available.
-- You need StreamElements or StreamLabs bot announcing follow alerts in the chat.  
-    Example: **Streamlabs**: Thank you for following *username*!
+- The feature that monitors new followers requires that you have StreamElements or StreamLabs bot announcing follow alerts in the chat.  
+    Example:
+    - **Streamlabs**: Thank you for following *username*!
+    - **StreamElements**: Welcome! *username* Thank you for following!
+            
+----
 
+If you have issues or just need help [open a discussion here](https://github.com/victornpb/twitch-mass-ban/discussions)
