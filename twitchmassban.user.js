@@ -8,7 +8,7 @@
 // @run-at        document-idle
 // @author        victornpb
 // @homepageURL   https://github.com/victornpb/twitch-mass-ban
-// @supportURL    https://github.com/victornpb/twitch-mass-ban/issues
+// @supportURL    https://github.com/victornpb/twitch-mass-ban/discussions
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant         none
 // @license       MIT
