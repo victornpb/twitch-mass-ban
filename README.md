@@ -6,18 +6,17 @@ Clicking <kbd>Ban all</kbd> will **give them all the 🚷 BAN HAMMER**!
 
 # Instructions
 
-1. First you need a **browser extension** for managing **user scripts** (skip if you already have one):
-    
-    - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)     
-    - Firefox: [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/), [Tampermonkey](https://addons.mozilla.org/firefox/addon/tampermonkey/), or [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/)  
-    - Safari: ~[Tampermonkey](https://github.com/victornpb/deleteDiscordMessages/issues/91#issuecomment-654514364)~ 
-    - Microsoft Edge: [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)  
-    - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
 
-1. Get **RaidHammer** from: 
-**<a href="https://greasyfork.org/en/scripts/432982-twitchmassban-easily-ban-hate-raid-accounts" target="_blank">Install from GreasyFork</a>**
-or
-**<a href="https://openuserjs.org/scripts/victornpb/TwitchMassBan_-_Easily_ban_hate_raid_accounts" target="_blank">Install from OpenUserJS</a>**
+1. First you need a Browser Extension for managing UserScripts[[1]][userscrips_faq] (skip if you already have one):  
+   * Chrome: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
+   * Brave: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
+   * Firefox: [Greasemonkey][firefox_greasemonkey], [Tampermonkey][firefox_tampermonkey], or [Violentmonkey][firefox_violentmonkey]  
+   * Opera: [Tampermonkey][opera_tampermonkey] or [Violentmonkey][opera_violentmonkey]   
+   * Edge: [Tampermonkey][edge_tampermonkey]  
+   * Safari: ~[Tampermonkey][safari_tampermonkey]~ 
+    
+1. Install Twitch RaidHammer:  
+  [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]
 
 1. You're all set!
  
@@ -36,7 +35,7 @@ No more coping and pasting hundreds of /ban commands.
 ----
 #### Notes
 
-- It will ONLY appear on streams you have moderation tools available.
+- It will ONLY appear on streams you have moderation privilegies.
 - The feature that monitors new followers requires that you have StreamElements or StreamLabs bot announcing follow alerts in the chat.  
     Example:
     - **Streamlabs**: Thank you for following *username*!
@@ -45,3 +44,23 @@ No more coping and pasting hundreds of /ban commands.
 ----
 
 If you have issues or just need help [open a discussion here](https://github.com/victornpb/twitch-mass-ban/discussions)
+
+
+<!-- links -->
+  [userscrips_faq]: https://en.wikipedia.org/wiki/Userscript
+  [greasyfork_icon]: https://user-images.githubusercontent.com/3372598/166113712-1bc3d654-1342-4f1e-9845-21c3b21524b1.png
+  [openuserjs_icon]: https://user-images.githubusercontent.com/3372598/166113714-5a2ede39-8d66-43a8-b5da-8f1897cb3121.png
+  
+  [chrome_violentmonkey]: https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag
+  [chrome_tampermonkey]: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo
+  [firefox_greasemonkey]: https://addons.mozilla.org/firefox/addon/greasemonkey/
+  [firefox_tampermonkey]: https://addons.mozilla.org/firefox/addon/tampermonkey/
+  [firefox_violentmonkey]: https://addons.mozilla.org/firefox/addon/violentmonkey/
+  [safari_tampermonkey]: https://github.com/victornpb/undiscord/issues/91#issuecomment-654514364
+  [edge_tampermonkey]: https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd
+  [opera_tampermonkey]: https://addons.opera.com/extensions/details/tampermonkey-beta/
+  [opera_violentmonkey]: https://addons.opera.com/extensions/details/violent-monkey/
+
+<!-- Download links -->
+  [greasyfork_url]: <https://greasyfork.org/en/scripts/432982-twitchmassban-easily-ban-hate-raid-accounts> "Get Twitch RaidHammer from GreasyFork"
+  [openuserjs_url]: <https://openuserjs.org/scripts/victornpb/TwitchMassBan_-_Easily_ban_hate_raid_accounts> "Get Twitch RaidHammer from OpenUserJS"
