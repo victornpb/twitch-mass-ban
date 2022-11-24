@@ -3,7 +3,7 @@
 // @name          Twitch RaidHammer - Easily ban multiple accounts during hate raids
 // @description   A tool for moderating Twitch easier during hate raids
 // @namespace     https://github.com/victornpb/twitch-mass-ban
-// @version       1.1.3
+// @version       1.1.4
 // @match         *://*.twitch.tv/*
 // @run-at        document-idle
 // @author        victornpb
@@ -198,6 +198,19 @@
                 }
             }
 
+        } else if (document.location.toString().includes('/moderator/')){
+            const chatBtn = document.querySelector('[data-a-target="chat-send-button"]');
+            const twitchBar = chatBtn.parentElement.parentElement.parentElement;
+            if (twitchBar && !twitchBar.contains(activateBtn)) {
+                console.log(LOGPREFIX, 'Mod tools available. Adding button...');
+                twitchBar.insertBefore(activateBtn, twitchBar.firstChild);
+                document.body.appendChild(d);
+                if (!enabled) {
+                    console.log(LOGPREFIX, 'Started chatWatchdog...');
+                    watchdogTimer = setInterval(chatWatchdog, 500);
+                    enabled = true;
+                }
+            }
         }
         else {
             if (enabled) {
@@ -323,8 +336,9 @@
 
     function ignoreAll() {
         console.log(LOGPREFIX, 'Ignoring all...', queueList);
-        for (const user of queueList)
+        for (const user of queueList) {
             ignoreItem(user);
+        }
     }
 
     async function banAll() {
@@ -355,7 +369,7 @@
         sendMessage('/ban ' + user);
         renderList();
     }
-    
+
     function sendMessage(msg) {
         try{
             sendMessageOld(msg);
@@ -364,7 +378,7 @@
             sendMessageSlate(msg);
         }
     }
-  
+
     function sendMessageOld(msg) {
         const textarea = document.querySelector("[data-a-target='chat-input']");
         const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
