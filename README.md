@@ -21,9 +21,20 @@ Everytime someone follows the window should appear, then you can choose to:
 1. Install Twitch RaidHammer:  
   [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]
 
+1. (Optional) The feature that monitors new followers as they come,  
+  requires that you have [StreamElements](https://streamelements.com/features/chatbot) or [StreamLabs](https://streamlabs.com/content-hub/tag/chatbot) Bot announcing follow alerts in the chat:  
+  (This is not required if you just want to use the mass banning feature).  
+    You should have the bots announce one of these messages:
+    - > **Streamlabs**: Thank you for following `username`!
+    - > **StreamElements**: Welcome! `username` Thank you for following!  
+    
+
+
 1. You're all set!
  
 Look for the hammer icon next to Twitch chat. [see notes](#notes)
+
+Note: It will ONLY appear on streams you have moderation privilegies.
 
 ----
 
@@ -34,15 +45,6 @@ No more coping and pasting hundreds of /ban commands.
 
 ![Mass banning list of bots](https://user-images.githubusercontent.com/3372598/165885461-a997f0f1-e880-4390-8b9e-77a95e707833.gif)
 
-
-----
-#### Notes
-
-- It will ONLY appear on streams you have moderation privilegies.
-- The feature that monitors new followers requires that you have StreamElements or StreamLabs bot announcing follow alerts in the chat.  
-    Example:
-    - **Streamlabs**: Thank you for following *username*!
-    - **StreamElements**: Welcome! *username* Thank you for following!
             
 ----
 
